@@ -1,4 +1,5 @@
 import { pb } from '$lib/database.js';
+import { redirect } from '@sveltejs/kit';
 import Parser from 'ua-parser-js';
 import { getMetaTags } from '$lib/server/metatags.js';
 
@@ -20,8 +21,6 @@ export async function load(req) {
             });
         };
 
-        const metatags = await getMetaTags(link.long);
-
         if (link.archived == true) {
             return { 'type': 'failed', 'code': 307, 'url': req.url.origin + '/result/archived' };
         };
@@ -29,6 +28,18 @@ export async function load(req) {
         if (link.features.expiration == true && new Date(link.expiration) <= Date.now() / 1000) {
             return { 'type': 'failed', 'code': 307, 'url': req.url.origin + '/result/expired' };
         };
+
+        if (link.features.advanced != true) {
+            if (ua.getOS().name == 'Android' && link.features.customandroid) {
+                throw redirect(307, link.androidlink);
+            } else if (ua.getOS().name == 'iOS' && link.features.customios) {
+                throw redirect(307, link.ioslink);
+            } else {
+                throw redirect(307, link.long);
+            };
+        }
+
+        const metatags = await getMetaTags(link.long);
 
         let ua = new Parser(req.request.headers.get('User-Agent'));
         if (ua.getOS().name == 'Android' && link.features.customandroid) {

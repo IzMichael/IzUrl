@@ -31,7 +31,7 @@
     async function dataGet() {
         if (elink?.id) {
             if (elink.features.customog == true) {
-                metatags = { title: elink.ogtitle || '...', description: elink.ogdesc || '...', image: elink.ogimage || 'https://via.placeholder.com/150.png' }
+                metatags = { title: elink.ogtitle || '...', description: elink.ogdesc || '...', image: elink.ogimage || 'https://via.placeholder.com/150.png' };
             } else {
                 metatags = await getMetaTags(elink.long);
             };
@@ -40,7 +40,7 @@
                 eclicks = await pb.collection('clicks').getFullList(200, {
                     filter: `link.id = "${elink.id}"`
                 });
-                eclicks.map(a => a.ua = new Parser(a.useragent))
+                eclicks.map(a => a.ua = new Parser(a.useragent));
             };
         };
     };
@@ -48,7 +48,7 @@
     import jsSHA from 'jssha';
     let password = '';
     async function encryptPassword() {
-        const salt = genSlug(password.length)
+        const salt = genSlug(password.length);
         const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
         shaObj.update(password + salt);
         const hash = shaObj.getHash('HEX');
@@ -128,7 +128,7 @@
                             expand: 'domain'
                         });
                         if (elink?.id == link.id) elink = {};
-                        toast.push('Deleted!')
+                        toast.push('Deleted!');
                     } }}>
                         <img src="/assets/img/bin-outline.svg" class="w-6 aspect-square group-hover:invert transition-all duration-300 ease-in-out" alt="Bin" />
                     </button>
@@ -204,56 +204,33 @@
             <UTMTagEditor bind:elink tag="Content"  placeholder="Newsletter_1" />
             <a href="https://www.crazyegg.com/blog/utm-codes-guide-with-examples/" class="mb-4 w-full text-left" target="_blank" rel="noreferrer">UTM Guide</a>
 
-            <!-- <hr> -->
-
-            <!-- <button class="flex flex-row justify-between items-center w-full border-t {elink.features.password == true ? 'active' : ''} border-gray-200 pt-4 mt-4" on:click={() => elink.features.password = !elink.features.password}>
-                <p class="text-left flex-1">Password Protection</p>
-                <div class="toggle flex flex-row items-center w-[3rem] rounded-full p-1 transition-all duration-300 ease-in-out">
+            <button class="flex flex-row justify-between items-center w-full mb-4 transition-all duration-300 shrink-0 ease-in-out {elink.features.advanced == true ? '' : ''}" on:click={() => elink.features.advanced = !elink.features.advanced}>
+                <p class="text-left flex-1 text-lg {elink.features.advanced == true ? 'text-black' : 'text-gray-500'}">{elink.features.advanced == true ? 'Advanced' : 'Simple'} Link</p>
+                <div class="{elink.features.advanced == true ? 'pl-7 bg-blue-500' : 'pl-1 bg-gray-200'} flex flex-row items-center w-[3rem] rounded-full p-1 transition-all duration-300 ease-in-out">
                     <span class="p-2 rounded-full bg-white aspect-square shadow-sm"></span>
                 </div>
             </button>
 
-            <div class="w-full my-2 px-1 transition-[max-height] duration-300 ease-in-out overflow-y-hidden overflow-x-visible" style="{elink.features.password == true ? 'max-height: ' +  + ';' : 'max-height: 0;'}">
-                <p class="mb-1 text-left w-full">Password</p>
-                <input type="password" placeholder="************" bind:value={password} minlength="8">
-
-                <button class="w-full text-center p-2 px-5 text-white font-bold mt-2 text-lg bg-blue-500 rounded-lg" on:click={() => encryptPassword()}>Save</button>
+            <div class="pl-8 w-full">
+                {#if elink.features.advanced == true}
+                <OptionalFeature label="Password Protection" bind:enabled={elink.features.password}>
+                    <input type="password" placeholder="************" bind:value={password} minlength="8">
+                </OptionalFeature>
+    
+                <OptionalFeature label="Custom Social Cards" bind:enabled={elink.features.customog}>
+                    <p class="mb-1 text-left w-full">Title</p>
+                    <input type="text" placeholder="Example Site" bind:value={elink.ogtitle} maxlength="120">
+    
+                    <p class="mb-1 mt-3 text-left w-full">Description</p>
+                    <input type="text" placeholder="Example Site is a website about examples." bind:value={elink.ogdesc} maxlength="240">
+    
+                    <p class="mb-1 mt-3 text-left w-full">Image URL</p>
+                    <input type="url" placeholder="https://example.com/img/example.png" bind:value={elink.ogimage}>
+    
+                    <img src={elink.ogimage} alt="Preview" class="h-[250px] w-full object-cover mt-5 rounded-lg">
+                </OptionalFeature>
+                {/if}
             </div>
-
-            <button class="flex flex-row justify-between items-center w-full border-t {elink.features.customog == true ? 'active' : ''} border-gray-200 py-4" on:click={() => elink.features.customog = !elink.features.customog}>
-                <p class="text-left flex-1">Custom Social Cards</p>
-                <div class="toggle flex flex-row items-center w-[3rem] rounded-full p-1 transition-all duration-300 ease-in-out">
-                    <span class="p-2 rounded-full bg-white aspect-square shadow-sm"></span>
-                </div>
-            </button>
-
-            <div class="w-full max-h-0 my-2 px-1 transition-[max-height] duration-300 ease-in-out overflow-y-hidden overflow-x-visible" style="{elink.features.customog == true ? '' : 'max-height: 0;'}">
-                <p class="mb-1 text-left w-full">Title</p>
-                <input type="text" placeholder="Example Site" bind:value={elink.ogtitle} maxlength="120">
-
-                <p class="mb-1 mt-3 text-left w-full">Description</p>
-                <input type="text" placeholder="Example Site is a website about examples." bind:value={elink.ogdesc} maxlength="240">
-
-                <p class="mb-1 mt-3 text-left w-full">Image URL</p>
-                <input type="url" placeholder="https://example.com/img/example.png" bind:value={elink.ogimage}>
-            </div> -->
-
-            <OptionalFeature label="Password Protection" bind:enabled={elink.features.password}>
-                <input type="password" placeholder="************" bind:value={password} minlength="8">
-            </OptionalFeature>
-
-            <OptionalFeature label="Custom Social Cards" bind:enabled={elink.features.customog}>
-                <p class="mb-1 text-left w-full">Title</p>
-                <input type="text" placeholder="Example Site" bind:value={elink.ogtitle} maxlength="120">
-
-                <p class="mb-1 mt-3 text-left w-full">Description</p>
-                <input type="text" placeholder="Example Site is a website about examples." bind:value={elink.ogdesc} maxlength="240">
-
-                <p class="mb-1 mt-3 text-left w-full">Image URL</p>
-                <input type="url" placeholder="https://example.com/img/example.png" bind:value={elink.ogimage}>
-
-                <img src={elink.ogimage} alt="Preview" class="h-[250px] w-full object-cover mt-5 rounded-lg">
-            </OptionalFeature>
 
             <OptionalFeature label="Expiration Date" bind:enabled={elink.features.expiration}>
                 <input type="datetime-local" min={new Date().toISOString().split(':').slice(0, 2).join(':')} step="60" bind:value={elink.expiration}>
@@ -295,7 +272,7 @@
             <button class="px-2 w-full bg-blue-500 text-white font-bold rounded-lg overflow-hidden transition-all duration-300 ease-in-out {unsaved == true ? 'h-11 my-5 py-2' : 'h-0 my-0 py-0'}" on:click={async () => {
                 saveMsg = 'Saving...';
                 await encryptPassword();
-                let save = await pb.collection('links').update(elink.id, elink);
+                await pb.collection('links').update(elink.id, elink);
                 elink = await pb.collection('links').getOne(elink.id, {
                     filter: `owner = "${pb.authStore.model?.id}"`,
                     expand: 'domain'

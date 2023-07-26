@@ -78,7 +78,7 @@
                             expand: 'domain'
                         });
                         if (edom?.id == dom.id) edom = {};
-                        toast.push('Deleted!')
+                        toast.push('Deleted!');
                     } }}>
                         <img src="/assets/img/bin-outline.svg" class="w-6 aspect-square group-hover:invert transition-all duration-300 ease-in-out" alt="Bin" />
                     </button>
@@ -131,7 +131,7 @@
         <div class="w-full flex flex-col justify-center items-center px-5">
             <button class="px-2 w-full bg-blue-500 text-white font-bold rounded-lg overflow-hidden transition-all duration-300 ease-in-out {unsaved == true ? 'h-11 my-5 py-2' : 'h-0 my-0 py-0'}" on:click={async () => {
                 saveMsg = 'Saving...';
-                let save = await pb.collection('domains').update(edom.id, edom);
+                await pb.collection('domains').update(edom.id, edom);
                 edom = await pb.collection('domains').getOne(edom.id);
                 data.domains = await pb.collection('domains').getFullList(200);
                 saveMsg = 'Save Changes';
