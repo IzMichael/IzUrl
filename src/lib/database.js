@@ -4,8 +4,7 @@ import PocketBase from 'pocketbase';
 export const pb = new PocketBase('https://db.izmm.eu');
 pb.autoCancellation(false);
 export const auth = writable(pb.authStore.model);
-pb.authStore.onChange(user => {
-    console.log('authStore changed', user);
+pb.authStore.onChange(() => {
     auth.set(pb.authStore.model);
 });
 
