@@ -29,6 +29,8 @@ export async function load(req) {
             return { 'type': 'failed', 'code': 307, 'url': req.url.origin + '/result/expired' };
         };
 
+        let ua = new Parser(req.request.headers.get('User-Agent'));
+        
         if (link.features.advanced != true) {
             if (ua.getOS().name == 'Android' && link.features.customandroid) {
                 throw redirect(307, link.androidlink);
@@ -41,7 +43,6 @@ export async function load(req) {
 
         const metatags = await getMetaTags(link.long);
 
-        let ua = new Parser(req.request.headers.get('User-Agent'));
         if (ua.getOS().name == 'Android' && link.features.customandroid) {
             return { 'type': 'redirect', 'code': 307, 'url': link.androidlink, 'metatags': metatags, 'link': JSON.parse(JSON.stringify(link)) };
         } else if (ua.getOS().name == 'iOS' && link.features.customios) {
