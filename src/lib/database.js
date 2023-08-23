@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase('https://db.izmm.eu');
+export const pb = new PocketBase('https://db.izmm.uk');
 pb.autoCancellation(false);
 export const auth = writable(pb.authStore.model);
 pb.authStore.onChange(() => {

@@ -1,5 +1,5 @@
 <svelte:head>
-    <script defer data-domain="izmm.eu" src="https://analytics.izmichael.com/js/script.js"></script>
+    <script defer data-domain="izmm.uk" src="https://analytics.izmichael.com/js/script.js"></script>
 
     {#if data.link?.features.customog == true}
         <!-- Primary Meta Tags -->
