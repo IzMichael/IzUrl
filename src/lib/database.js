@@ -9,5 +9,9 @@ pb.authStore.onChange(() => {
 });
 
 if (pb.authStore.model?.username) {
-    pb.collection('users').authRefresh();
+    try {
+        pb.collection('users').authRefresh();
+    } catch (err) {
+        console.log(err);
+    }
 };
