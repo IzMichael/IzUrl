@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
-import { env } from '$env/dynamic/private';
+import { PUBLIC_PB_URL } from '$env/static/public';
 import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase(env.PB_URL);
+export const pb = new PocketBase(PUBLIC_PB_URL);
 pb.autoCancellation(false);
 export const auth = writable(pb.authStore.model);
 pb.authStore.onChange(() => {
